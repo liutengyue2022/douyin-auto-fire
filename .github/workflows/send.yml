@@ -24,6 +24,7 @@ jobs:
       contents: read
     env:
       DOUYIN_COOKIE: ${{ secrets.DOUYIN_COOKIE }}
+      DOUYIN_STORAGE_STATE: ${{ secrets.DOUYIN_STORAGE_STATE }}
       DOUYIN_CONFIG: ${{ secrets.DOUYIN_CONFIG }}
       DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
       DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
@@ -31,6 +32,7 @@ jobs:
       WEBHOOK_HEADERS: ${{ secrets.WEBHOOK_HEADERS }}
       WEBHOOK_TEMPLATE: ${{ secrets.WEBHOOK_TEMPLATE }}
       HEADLESS: "true"
+      TRACE: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
