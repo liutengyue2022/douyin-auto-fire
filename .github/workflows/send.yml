@@ -24,7 +24,7 @@ jobs:
       contents: read
     env:
       DOUYIN_COOKIE: ${{ secrets.DOUYIN_COOKIE }}
-      DOUYIN_STORAGE_STATE: ${{ secrets.DOUYIN_STORAGE_STATE }}
+      DOUYIN_STORAGE_STATE: storage-state.json
       DOUYIN_CONFIG: ${{ secrets.DOUYIN_CONFIG }}
       DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
       DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
@@ -40,6 +40,21 @@ jobs:
           python-version: "3.11"
       - run: pip install -r requirements.txt
       - run: python -m playwright install --with-deps chromium
+      - name: Restore protected login state
+        shell: bash
+        env:
+          STATE_GZIP: ${{ secrets.DOUYIN_STORAGE_STATE }}
+        run: |
+          python - <<'PY'
+          import base64
+          import gzip
+          import json
+          import os
+          from pathlib import Path
+          raw = gzip.decompress(base64.b64decode(os.environ['STATE_GZIP'], validate=True))
+          json.loads(raw)
+          Path('storage-state.json').write_bytes(raw)
+          PY
       - name: Write protected configuration
         shell: bash
         run: printf '%s' "$DOUYIN_CONFIG" > config.json
